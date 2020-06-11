@@ -15,18 +15,20 @@ public class CarController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!GameManager.instance.getIsPlaying()) return;
         LayerMask mask = LayerMask.GetMask("Wall");
         GameObject headSensor = transform.Find("Sensors/Front").gameObject;
         float distanceToWall = GetDistance(headSensor, mask);
         float translation = Mathf.Min(1.0f, distanceToWall * 10);
         translation *= speed;
-        if (distanceToWall < 0.01f) translation = 0f;
 
         GameObject leftSensor = transform.Find("Sensors/Left").gameObject;
         GameObject rightSensor = transform.Find("Sensors/Right").gameObject;
         float distanceToLeftWall = GetDistance(leftSensor, mask);
         float distanceToRightWall = GetDistance(rightSensor, mask);
-        
+        if (distanceToWall < 0.01f || distanceToLeftWall < 0.01f || distanceToRightWall < 0.01f)
+            translation = 0f;
+
         float rotation = distanceToLeftWall / (distanceToLeftWall + distanceToRightWall);
         rotation = rotation * 2.0f - 1.0f;
         rotation *= rotationSpeed;
@@ -42,7 +44,7 @@ public class CarController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(originPoint.transform.position,
             originPoint.transform.up, maxRayCastDistance, mask);
         if (hit.collider == null) return maxRayCastDistance;
-        else 
+        else
         {
             Debug.DrawLine(originPoint.transform.position, hit.point,
                 Color.green);

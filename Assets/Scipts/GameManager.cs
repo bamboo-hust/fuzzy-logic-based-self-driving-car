@@ -5,9 +5,14 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
     public Button startingButton;
     public Button endingButton;
     public Button goButton;
+    public GraphGenerator graphGenerator;
+    public GameObject examplePoint;
+    public GameObject carPrefab;
+    public GameObject car;
 
     private bool isPlaying = false;
     private bool reachedDestination = false;
@@ -16,11 +21,37 @@ public class GameManager : MonoBehaviour
     private bool isChooingEndingPoint;
     private GameObject startingPoint;
     private GameObject endingPoint;
+    private Camera cam;
+    private Color startingColor = Color.red;
+    private Color endingColor = Color.magenta;
+
+    void Awake()
+    {
+        if (!instance)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
 
     private void Start()
     {
+        graphGenerator = new GraphGenerator();
+        Graph G = graphGenerator.Generate();
+        // G.PrintGraph();
+
+        cam = Camera.main;
+
         startingButton.GetComponent<Button>().onClick.AddListener(ClickStartingPoint);
         endingButton.GetComponent<Button>().onClick.AddListener(ClickEndingPoint);
+        goButton.GetComponent<Button>().onClick.AddListener(ClickGo);
+        car = Instantiate(carPrefab);
+        car.SetActive(false);
+
         StartCoroutine(GameLoop());
     }
 
@@ -33,16 +64,54 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ChooingPoint()
     {
-        while (startingPoint == null || endingPoint == null)
+        SetDefaultCamera();
+        while (startingPoint == null || endingPoint == null || !isPlaying)
         {
-
+            if (Input.GetMouseButtonUp(0) && !isOverButtons())
+            {
+                // TODO: check if mouse position is inside the map
+                if (isChooingStartingPoint)
+                {
+                    SelectPoint(ref startingPoint, startingColor);
+                }
+                if (isChooingEndingPoint)
+                {
+                    SelectPoint(ref endingPoint, endingColor);
+                }
+            }
+            yield return null;
         }
-        return null;
     }
 
     private IEnumerator RoundPlaying()
     {
-        return null;
+        ConfigCar();
+        ConfigCamera();
+        DisablePoints();
+        while (true) yield return null;
+    }
+
+    void ConfigCar()
+    {
+        car.SetActive(true);
+        car.transform.position = startingPoint.transform.position;
+
+        Vector2 relativePos = endingPoint.transform.position - startingPoint.transform.position;
+        relativePos.Normalize();
+        float rot_z = Mathf.Atan2(relativePos.y, relativePos.x) * Mathf.Rad2Deg;
+        car.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+    }
+
+    void ConfigCamera()
+    {
+        cam.orthographicSize = 1.0f;
+        cam.GetComponent<CameraController>().SetFollowCamera(car);
+    }
+
+    void DisablePoints()
+    {
+        startingPoint.SetActive(false);
+        endingPoint.SetActive(false);
     }
 
     private IEnumerator RoundEnding()
@@ -53,10 +122,59 @@ public class GameManager : MonoBehaviour
     private void ClickStartingPoint()
     {
         Debug.Log("start");
+        isChooingStartingPoint = true;
+        isChooingEndingPoint = false;
     }
 
     private void ClickEndingPoint()
     {
-        Debug.Log("start");
+        Debug.Log("end");
+        isChooingStartingPoint = false;
+        isChooingEndingPoint = true;
+    }
+
+    private void ClickGo()
+    {
+        Debug.Log("go");
+        if (startingPoint == null || endingPoint == null)
+        {
+            return;
+        }
+        isPlaying = true;
+    }
+
+    private void SelectPoint(ref GameObject point, Color color)
+    {
+        if (point == null)
+        {
+            point = Instantiate(examplePoint);
+            point.SetActive(true);
+            GameObject child = point.transform.GetChild(0).gameObject;
+            child.GetComponent<SpriteRenderer>().color = color;
+        }
+        Vector2 mousePosition = Input.mousePosition;
+        Vector3 position = cam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 0.0f));
+        position.z = 0;
+        point.transform.position = position;
+        Debug.Log(point.transform.position);
+    }
+
+    bool isOverButtons()
+    {
+        if (startingButton.GetComponent<UIElement>().mouseOver) return true;
+        if (endingButton.GetComponent<UIElement>().mouseOver) return true;
+        if (goButton.GetComponent<UIElement>().mouseOver) return true;
+        return false;
+    }
+
+    private void SetDefaultCamera()
+    {
+        cam.transform.position = new Vector3(0, 0, -10);
+        cam.orthographicSize = 4.9f;
+    }
+
+    public bool getIsPlaying()
+    {
+        return isPlaying;
     }
 }
