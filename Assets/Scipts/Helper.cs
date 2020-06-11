@@ -20,6 +20,16 @@ public class Helper {
         return false;
     }
 
+    public static List<GameObject> ExtractTrafficLights(RaycastHit2D[] hit2Ds) {
+        List<GameObject> res = new List<GameObject>();
+        for (int i = 0; i < hit2Ds.Length; ++i) {
+            if (hit2Ds[i].transform.parent.name == "TrafficLight") {
+                res.Add(hit2Ds[i].transform.gameObject);
+            }
+        }
+        return res;
+    }
+
     public static bool IntersectRoad(Vector2 A, Vector2 B) {
         return HasRoad(GetIntersections(A, B));
     }
