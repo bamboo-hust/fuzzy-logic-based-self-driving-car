@@ -44,6 +44,9 @@ public class GraphGenerator
                     } else {
                         closest[nearestLight] = j;
                     }
+                } else {
+                    Debug.Log("DIRECT EDGE " + i + " " + j);
+                    G.AddEdge(i, j, new GameObject("dummy"));
                 }
             }
             foreach (int k in closest.Keys) {

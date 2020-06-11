@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     {
         graphGenerator = new GraphGenerator();
         G = graphGenerator.Generate();
+        G.PrintGraph();
 
         cam = Camera.main;
 

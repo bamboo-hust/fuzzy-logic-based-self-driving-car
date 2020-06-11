@@ -49,15 +49,20 @@ public class Graph {
         queue.Enqueue(from);
         int[] trace = new int[V.Count];
         for (int i = 0; i < V.Count; ++i) trace[i] = -1;
+        trace[from] = from;
         while (queue.Count > 0) {
             int u = (int) queue.Dequeue();
             for (int i = 0; i < V[u].adj.Count; ++i) {
                 int v = V[u].adj[i].to;
+                Debug.Log("edge " + u + " " + v);
                 if (trace[v] < 0) {
                     trace[v] = u;
                     queue.Enqueue(v);
                 }
             }
+        }
+        for (int i = 0; i < V.Count; ++i) {
+            Debug.Log("trace " + i + " " + trace[i]);
         }
         if (trace[to] == -1) return new List<int>();
         List<int> path = new List<int>();
@@ -66,6 +71,9 @@ public class Graph {
         }
         path.Add(from);
         path.Reverse();
+        foreach (int u in path) {
+            Debug.Log("path " + u);
+        }
         return path;
     }
 
