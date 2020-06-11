@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
     public GraphGenerator graphGenerator;
     public GameObject examplePoint;
     public GameObject carPrefab;
-    public GameObject car;
+    public GameObject outsideWarning;
 
     private bool isPlaying = false;
     private bool reachedDestination = false;
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
     private GameObject startingPoint;
     private GameObject endingPoint;
     private Camera cam;
+    private GameObject car;
     private Color startingColor = Color.red;
     private Color endingColor = Color.magenta;
 
@@ -42,7 +44,6 @@ public class GameManager : MonoBehaviour
     {
         graphGenerator = new GraphGenerator();
         Graph G = graphGenerator.Generate();
-        // G.PrintGraph();
 
         cam = Camera.main;
 
@@ -69,14 +70,23 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetMouseButtonUp(0) && !isOverButtons())
             {
-                // TODO: check if mouse position is inside the map
                 if (isChooingStartingPoint)
                 {
-                    SelectPoint(ref startingPoint, startingColor);
+                    Vector2 clickedPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+                    if (!Helper.checkPointInRoad(clickedPosition))
+                    {
+                        outsideWarning.GetComponent<Animator>().SetTrigger("clickedOutside");
+                    }
+                    else SelectPoint(ref startingPoint, startingColor);
                 }
                 if (isChooingEndingPoint)
                 {
-                    SelectPoint(ref endingPoint, endingColor);
+                    Vector2 clickedPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+                    if (!Helper.checkPointInRoad(clickedPosition))
+                    {
+                        outsideWarning.GetComponent<Animator>().SetTrigger("clickedOutside");
+                    }
+                    else SelectPoint(ref endingPoint, endingColor);
                 }
             }
             yield return null;
@@ -104,14 +114,13 @@ public class GameManager : MonoBehaviour
 
     void ConfigCamera()
     {
-        cam.orthographicSize = 1.0f;
+        cam.GetComponent<CameraController>().targerOrthographicSize = 1.0f;
         cam.GetComponent<CameraController>().SetFollowCamera(car);
     }
 
     void DisablePoints()
     {
         startingPoint.SetActive(false);
-        endingPoint.SetActive(false);
     }
 
     private IEnumerator RoundEnding()
@@ -121,21 +130,18 @@ public class GameManager : MonoBehaviour
 
     private void ClickStartingPoint()
     {
-        Debug.Log("start");
         isChooingStartingPoint = true;
         isChooingEndingPoint = false;
     }
 
     private void ClickEndingPoint()
     {
-        Debug.Log("end");
         isChooingStartingPoint = false;
         isChooingEndingPoint = true;
     }
 
     private void ClickGo()
     {
-        Debug.Log("go");
         if (startingPoint == null || endingPoint == null)
         {
             return;
@@ -173,7 +179,7 @@ public class GameManager : MonoBehaviour
         cam.orthographicSize = 4.9f;
     }
 
-    public bool getIsPlaying()
+    public bool IsPlaying()
     {
         return isPlaying;
     }

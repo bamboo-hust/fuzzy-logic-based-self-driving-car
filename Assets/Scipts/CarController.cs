@@ -15,7 +15,7 @@ public class CarController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!GameManager.instance.getIsPlaying()) return;
+        if (!GameManager.instance.IsPlaying()) return;
         LayerMask mask = LayerMask.GetMask("Wall");
         GameObject headSensor = transform.Find("Sensors/Front").gameObject;
         float distanceToWall = GetDistance(headSensor, mask);
