@@ -121,6 +121,7 @@ public class GameManager : MonoBehaviour
     void DisablePoints()
     {
         startingPoint.SetActive(false);
+        endingPoint.transform.localScale /= 3.0f;
     }
 
     private IEnumerator RoundEnding()
