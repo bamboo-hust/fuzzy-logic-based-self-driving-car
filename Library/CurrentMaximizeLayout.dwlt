@@ -25,7 +25,7 @@ MonoBehaviour:
   m_MinSize: {x: 713, y: 498}
   m_MaxSize: {x: 18008, y: 14048}
   vertical: 0
-  controlID: 9666
+  controlID: 3182
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_MinSize: {x: 202, y: 448}
   m_MaxSize: {x: 4002, y: 8048}
   vertical: 1
-  controlID: 9667
+  controlID: 3183
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -190,9 +190,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 155.50002, y: 18.699995, z: 0}
+    m_Target: {x: -1.2119696, y: -1.2353129, z: -0.097861595}
     speed: 2
-    m_Value: {x: 155.50002, y: 18.699995, z: 0}
+    m_Value: {x: -1.2119696, y: -1.2353129, z: -0.097861595}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -224,9 +224,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 168.69182
+    m_Target: 10.01505
     speed: 2
-    m_Value: 168.69182
+    m_Value: 10.01505
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -383,7 +383,7 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -38510
+  m_LastSelectedObjectID: 3154
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -408,7 +408,7 @@ MonoBehaviour:
   m_MinSize: {x: 234, y: 498}
   m_MaxSize: {x: 10004, y: 14048}
   vertical: 1
-  controlID: 9645
+  controlID: 3142
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -428,8 +428,8 @@ MonoBehaviour:
     y: 0
     width: 333
     height: 327
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 204, y: 224}
+  m_MaxSize: {x: 4004, y: 4024}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 12}
@@ -463,10 +463,10 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 0}
+      scrollPos: {x: 0, y: 446}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 0280ffff1081ffff70b2ffffeacfffffa2ecffffc2fbffffdefbffff
+      m_ExpandedIDs: 5cfaffff60faffff68faffff6cfaffff70faffff78faffff80faffff88faffff8cfaffff90faffff98faffff9cfaffffa0faffffa4faffffacfaffffb4faffffbcfaffffc0faffffc8faffffccfaffffd4faffffd8faffffdcfaffffe0faffffe4faffffecfafffff4faffff00fbffff04fbffff0cfbffff14fbffff18fbffff20fbffff30fbffff38fbffff3cfbffff44fbffff4cfbffff50fbffff58fbffff60fbffff68fbffff70fbffffccfbffffdcfbffffdefbffff3e0c0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -554,20 +554,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefabs
+    - Assets/Scipts
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Prefabs
+  - Assets/Scipts
   m_LastFoldersGridSize: 16
-  m_LastProjectPath: /home/quanglm1998/UnityProjects/fuzzy-logic-based-self-driving-car
+  m_LastProjectPath: /home/quanglm1998/UnityProjects/fuzzy-logic-based-self-driving-car-2018
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 7e0b0000
-    m_LastClickedID: 2942
-    m_ExpandedIDs: 000000008009000000ca9a3b
+    m_SelectedIDs: 640b0000
+    m_LastClickedID: 2916
+    m_ExpandedIDs: 000000008409000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -595,7 +595,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000008009000000ca9a3b
+    m_ExpandedIDs: 000000008409000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -620,10 +620,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 9269ffff
-    m_LastClickedInstanceID: -38510
-    m_HadKeyboardFocusLastEvent: 0
-    m_ExpandedInstanceIDs: 120f0000683100004a0b0000100f0000d430000000000000063c0000
+    m_SelectedInstanceIDs: 3acaffff
+    m_LastClickedInstanceID: -13766
+    m_HadKeyboardFocusLastEvent: 1
+    m_ExpandedInstanceIDs: 120f000000000000683100004a0b0000100f0000d4300000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

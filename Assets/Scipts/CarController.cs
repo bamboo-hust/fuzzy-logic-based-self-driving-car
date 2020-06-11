@@ -13,13 +13,14 @@ public class CarController : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         LayerMask mask = LayerMask.GetMask("Wall");
         GameObject headSensor = transform.Find("Sensors/Front").gameObject;
         float distanceToWall = GetDistance(headSensor, mask);
         float translation = Mathf.Min(1.0f, distanceToWall * 10);
         translation *= speed;
+        if (distanceToWall < 0.01f) translation = 0f;
 
         GameObject leftSensor = transform.Find("Sensors/Left").gameObject;
         GameObject rightSensor = transform.Find("Sensors/Right").gameObject;
