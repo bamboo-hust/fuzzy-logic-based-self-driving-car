@@ -44,7 +44,7 @@ public class Graph {
         }
     }
 
-    List<int> FindPath(int from, int to) {
+    public List<int> FindPath(int from, int to) {
         Queue queue = new Queue();
         queue.Enqueue(from);
         int[] trace = new int[V.Count];
@@ -69,30 +69,38 @@ public class Graph {
         return path;
     }
 
-    int GetId(GameObject point) {
+    public int GetId(GameObject point) {
         for (int i = 0; i < V.Count; ++i) {
             if (V[i].point == point) return i;
         }
         return -1;
     }
 
-    List<GameObject> GetOpenLights(GameObject from, GameObject to) {
+    public List<GameObject> GetCheckPointsOnPath(GameObject from, GameObject to) {
         int from_id = GetId(from);
         int to_id = GetId(to);
         List<GameObject> res = new List<GameObject>();
         if (from_id < 0 || to_id < 0) return res;
         List<int> path = FindPath(from_id, to_id);
         if (path.Count == 0) return res;
+        for (int i = 0; i < path.Count; ++i) {
+            res.Add(V[path[i]].point);
+        }
+        return res;
 
-        for (int i = 1; i < path.Count; ++i) {
-            Vector2 from_point = V[path[i - 1]].point.transform.position;
-            Vector2 to_point = V[path[i]].point.transform.position;
+        
+    }
+
+    public List<GameObject> GetOpenLights(List<GameObject> checkPointsList) {
+        List<GameObject> res = new List<GameObject>();
+        for (int i = 1; i < checkPointsList.Count; ++i) {
+            Vector2 from_point = checkPointsList[i - 1].transform.position;
+            Vector2 to_point = checkPointsList[i].transform.position;
             List<GameObject> cur = Helper.ExtractTrafficLights(Helper.GetIntersections(from_point, to_point));
             foreach (GameObject o in cur) {
                 res.Add(o);
             }
         }
-
         return res;
     }
 }
