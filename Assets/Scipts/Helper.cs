@@ -54,7 +54,7 @@ public class Helper {
         return trafficLights;
     }
 
-    bool checkPointInRoad(Vector2 O) {
+    public static bool checkPointInRoad(Vector2 O) {
         GameObject[] checkPoints = GetCheckPoints();
         for (int i = 0; i < checkPoints.Length; ++i) {
             if (!IntersectRoad(O, checkPoints[i].transform.position)) {
