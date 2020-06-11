@@ -10,22 +10,8 @@ public class GraphGenerator
     private GameObject roadCollider;
 
     public GraphGenerator() {
-        {
-            Transform checkPointsTransform = GameObject.Find("CheckPoints").transform;
-            checkPoints = new GameObject[checkPointsTransform.childCount];
-            for (int i = 0; i < checkPointsTransform.childCount; ++i) {
-                Transform childTransform = checkPointsTransform.GetChild(i);
-                checkPoints[i] = childTransform.gameObject;
-            }
-        }
-        {
-            Transform trafficLightsTransform = GameObject.Find("TrafficLight").transform;
-            trafficLights = new GameObject[trafficLightsTransform.childCount];
-            for (int i = 0; i < trafficLightsTransform.childCount; ++i) {
-                Transform childTransform = trafficLightsTransform.GetChild(i);
-                trafficLights[i] = childTransform.gameObject;
-            }
-        }
+        checkPoints = Helper.GetCheckPoints();
+        trafficLights = Helper.GetTrafficLights();
         roadCollider = GameObject.Find("RoadCollider");
     }
 
@@ -39,7 +25,7 @@ public class GraphGenerator
             Dictionary<int, int> closest = new Dictionary<int, int>();
             for (int j = 0; j < checkPoints.Length; ++j) if (i != j) {
                 RaycastHit2D[] hits = GetIntersections(checkPoints[i], checkPoints[j]);
-                if (HasRoad(hits)) {
+                if (Helper.HasRoad(hits)) {
                     continue;
                 }
                 int nearestLight = -1;
@@ -68,18 +54,7 @@ public class GraphGenerator
     }
 
     RaycastHit2D[] GetIntersections(GameObject A, GameObject B) {
-        Vector2 diff = B.transform.position - A.transform.position;
-        RaycastHit2D[] hits = Physics2D.RaycastAll(A.transform.position, diff, diff.magnitude);
-        return hits;
-    }
-
-    bool HasRoad(RaycastHit2D[] hit2Ds) {
-        for (int i = 0; i < hit2Ds.Length; ++i) {
-            if (hit2Ds[i].transform.gameObject == roadCollider) {
-                return true;
-            }
-        }
-        return false;
+        return Helper.GetIntersections(A.transform.position, B.transform.position);
     }
 
     bool HasTrafficLight(RaycastHit2D[] hit2Ds, GameObject light) {
