@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Helper {
+    private const float MAX_DISTANCE = 100f;
 
     public static RaycastHit2D[] GetIntersections(Vector2 A, Vector2 B) {
         Vector2 diff = B - A;
@@ -62,5 +63,19 @@ public class Helper {
             }
         }
         return false;
+    }
+
+    public static GameObject GetClosestCheckPoint(Vector2 point) {
+        GameObject[] checkPoints = GetCheckPoints();
+        GameObject result = null;
+        double distance = MAX_DISTANCE;
+        foreach (GameObject checkPoint in checkPoints) {
+            double currentDistance = Vector2.Distance(point, checkPoint.transform.position);
+            if (currentDistance < distance) {
+                distance = currentDistance;
+                result = checkPoint;
+            }
+        }
+        return result;
     }
 }

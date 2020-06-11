@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 658cc097961a06134a7948755889d0fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.3
+  speed: 0.5
   rotationSpeed: 200
   maxRayCastDistance: 100
 --- !u!50 &1043861497

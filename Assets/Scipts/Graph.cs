@@ -87,8 +87,6 @@ public class Graph {
             res.Add(V[path[i]].point);
         }
         return res;
-
-        
     }
 
     public List<GameObject> GetOpenLights(List<GameObject> checkPointsList) {

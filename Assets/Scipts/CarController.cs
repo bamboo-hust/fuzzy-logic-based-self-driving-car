@@ -8,24 +8,33 @@ public class CarController : MonoBehaviour
     public float rotationSpeed;
     public float maxRayCastDistance;
 
+    private int trafficLightsParity;
+
     void Start()
     {
-
+        trafficLightsParity = 0;
     }
 
     void FixedUpdate()
     {
         if (!GameManager.instance.IsPlaying()) return;
-        LayerMask mask = LayerMask.GetMask("Wall");
+
+        LayerMask wallMask = LayerMask.GetMask("Wall");
+        LayerMask lightMask = LayerMask.GetMask("TrafficLight");
+        List<LayerMask> masks = new List<LayerMask>();
+        masks.Add(wallMask);
+        masks.Add(lightMask);
+
         GameObject headSensor = transform.Find("Sensors/Front").gameObject;
-        float distanceToWall = GetDistance(headSensor, mask);
+        float distanceToWall = GetDistance(headSensor, masks);
         float translation = Mathf.Min(1.0f, distanceToWall * 10);
         translation *= speed;
 
         GameObject leftSensor = transform.Find("Sensors/Left").gameObject;
         GameObject rightSensor = transform.Find("Sensors/Right").gameObject;
-        float distanceToLeftWall = GetDistance(leftSensor, mask);
-        float distanceToRightWall = GetDistance(rightSensor, mask);
+        float distanceToLeftWall = GetDistance(leftSensor, masks);
+        float distanceToRightWall = GetDistance(rightSensor, masks);
+
         if (distanceToWall < 0.01f || distanceToLeftWall < 0.01f || distanceToRightWall < 0.01f)
             translation = 0f;
 
@@ -39,16 +48,26 @@ public class CarController : MonoBehaviour
         transform.position += transform.up * translation;
     }
 
-    private float GetDistance(GameObject originPoint, LayerMask mask)
+    private float GetDistance(GameObject originPoint, List<LayerMask> masks)
     {
-        RaycastHit2D hit = Physics2D.Raycast(originPoint.transform.position,
-            originPoint.transform.up, maxRayCastDistance, mask);
-        if (hit.collider == null) return maxRayCastDistance;
-        else
+        float result = maxRayCastDistance;
+        Vector2 hitPosition = Vector2.zero;
+        foreach (LayerMask mask in masks)
         {
-            Debug.DrawLine(originPoint.transform.position, hit.point,
-                Color.green);
-            return Vector2.Distance(hit.point, originPoint.transform.position);
+            RaycastHit2D hit = Physics2D.Raycast(originPoint.transform.position,
+                originPoint.transform.up, maxRayCastDistance, mask);
+            if (hit.collider == null) continue;
+            else
+            {
+                float distance = Vector2.Distance(hit.point, originPoint.transform.position);
+                if (distance < result)
+                {
+                    result = distance;
+                    hitPosition = hit.point;
+                }
+            }
         }
+        Debug.DrawLine((Vector2)originPoint.transform.position, (Vector2)hitPosition, Color.green);
+        return result;
     }
 }

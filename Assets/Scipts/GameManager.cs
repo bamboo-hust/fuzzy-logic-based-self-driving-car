@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public Button startingButton;
     public Button endingButton;
     public Button goButton;
-    public GraphGenerator graphGenerator;
     public GameObject examplePoint;
     public GameObject carPrefab;
     public GameObject outsideWarning;
@@ -18,6 +17,8 @@ public class GameManager : MonoBehaviour
     private bool isPlaying = false;
     private bool reachedDestination = false;
 
+    private GraphGenerator graphGenerator;
+    private Graph G;
     private bool isChooingStartingPoint;
     private bool isChooingEndingPoint;
     private GameObject startingPoint;
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         graphGenerator = new GraphGenerator();
-        Graph G = graphGenerator.Generate();
+        G = graphGenerator.Generate();
 
         cam = Camera.main;
 
@@ -98,7 +99,48 @@ public class GameManager : MonoBehaviour
         ConfigCar();
         ConfigCamera();
         DisablePoints();
+        SetupTrafficLights();
         while (true) yield return null;
+    }
+
+    void SetupTrafficLights()
+    {
+        TurnAllTrafficLightCollidersOn();
+        TurnTrafficLightCollidersOnPathOff();
+    }
+
+    void TurnTrafficLightCollidersOnPathOff()
+    {
+        GameObject firstPointInPath = Helper.GetClosestCheckPoint(startingPoint.transform.position);
+        GameObject lastPointInPath = Helper.GetClosestCheckPoint(endingPoint.transform.position);
+
+        Debug.Log("FIRST POINT: " + firstPointInPath.name);
+        Debug.Log("LAST POINT: " + lastPointInPath.name);
+
+        List<GameObject> checkPoints = G.GetCheckPointsOnPath(firstPointInPath, lastPointInPath);
+        
+        List<GameObject> pointsInPath = new List<GameObject>();
+        pointsInPath.Add(startingPoint);
+        pointsInPath.AddRange(checkPoints);
+        pointsInPath.Add(endingPoint);
+
+        Debug.Log("LENGTH OF PATH: " + pointsInPath.Count.ToString());
+
+        List<GameObject> lights = G.GetOpenLights(pointsInPath);
+        foreach (GameObject light in lights)
+        {
+            Debug.Log(light.name);
+            light.GetComponent<EdgeCollider2D>().enabled = false;
+        }
+    }
+
+    void TurnAllTrafficLightCollidersOn()
+    {
+        GameObject[] lights = Helper.GetTrafficLights();
+        foreach (GameObject light in lights)
+        {
+            light.GetComponent<EdgeCollider2D>().enabled = true;
+        }
     }
 
     void ConfigCar()
@@ -163,7 +205,6 @@ public class GameManager : MonoBehaviour
         Vector3 position = cam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 0.0f));
         position.z = 0;
         point.transform.position = position;
-        Debug.Log(point.transform.position);
     }
 
     bool isOverButtons()
