@@ -20,7 +20,7 @@ public class GraphGenerator
         for (int i = 0; i < checkPoints.Length; ++i) {
             G.V.Add(new Graph.Node(i, checkPoints[i]));
         }
-        Debug.Log("graph size = " + G.V.Count);
+        // Debug.Log("graph size = " + G.V.Count);
         for (int i = 0; i < checkPoints.Length; ++i) {
             Dictionary<int, int> closest = new Dictionary<int, int>();
             for (int j = 0; j < checkPoints.Length; ++j) if (i != j) {
