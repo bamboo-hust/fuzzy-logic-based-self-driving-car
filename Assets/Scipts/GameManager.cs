@@ -110,10 +110,10 @@ public class GameManager : MonoBehaviour
     void SetupTrafficLights()
     {
         TurnAllTrafficLightCollidersOn();
-        TurnTrafficLightCollidersOnPathOff();
+        FindTrafficLightCollidersOnPath();
     }
 
-    void TurnTrafficLightCollidersOnPathOff()
+    void FindTrafficLightCollidersOnPath()
     {
         List<GameObject> checkPoints = G.GetCheckPointsOnPath(startingPoint, endingPoint);
 
@@ -122,11 +122,6 @@ public class GameManager : MonoBehaviour
         List<GameObject> lights = G.GetOpenLights(checkPoints);
 
         GetComponent<TrafficLightController>().SetOpenLights(lights);
-
-        foreach (GameObject light in lights)
-        {
-            light.GetComponent<EdgeCollider2D>().enabled = false;
-        }
     }
 
     void TurnAllTrafficLightCollidersOn()

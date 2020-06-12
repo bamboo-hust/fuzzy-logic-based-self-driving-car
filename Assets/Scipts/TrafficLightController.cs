@@ -4,23 +4,30 @@ using UnityEngine;
 
 public class TrafficLightController : MonoBehaviour
 {
-    private GameObject[] lights;
-    private GameObject[] openLights;
-    private float[] timestamps;
     private const float RED_TIME = 5;
     private const float YELLO_TIME = 2;
     private const float GREEN_TIME = 5;
     private const float TOTAL_TIME = RED_TIME + YELLO_TIME + GREEN_TIME;
 
+    private GameObject[] lights;
+    private GameObject[] openLights;
+    private float[] timestamps;
+    private bool trafficLightParity;
+
     // Start is called before the first frame update
     void Start()
     {
+        trafficLightParity = false;
         lights = Helper.GetTrafficLights();
         timestamps = new float[lights.Length];
         for (int i = 0; i < timestamps.Length; i++)
         {
             timestamps[i] = Random.Range(0.0f, TOTAL_TIME);
         }
+    }
+
+    public void FlipTrafficLightParity() {
+        trafficLightParity = !trafficLightParity;
     }
 
     public void SetOpenLights(List<GameObject> openLights)
@@ -37,16 +44,17 @@ public class TrafficLightController : MonoBehaviour
     {
         if (!GameManager.instance.IsPlaying()) return;
 
+        Debug.Log(trafficLightParity);
         UpdateLightStatus();
         UpdateOpenLightColliders();
     }
 
     void UpdateOpenLightColliders() {
         foreach (GameObject light in openLights) {
-            if (isRed(light)) {
-                light.GetComponent<EdgeCollider2D>().enabled = true;
+            if (!isGreen(light) && !trafficLightParity) {
+                light.GetComponent<EdgeCollider2D>().isTrigger = false;
             } else {
-                light.GetComponent<EdgeCollider2D>().enabled = false;
+                light.GetComponent<EdgeCollider2D>().isTrigger = true;
             }
         }
     }
@@ -88,6 +96,18 @@ public class TrafficLightController : MonoBehaviour
         {
             GameObject child = light.transform.GetChild(i).gameObject;
             if (child.name == "traffic-red")
+            {
+                return child.activeSelf;
+            }
+        }
+        return false;
+    }
+
+    bool isGreen(GameObject light) {
+        for (int i = 0; i < light.transform.childCount; i++)
+        {
+            GameObject child = light.transform.GetChild(i).gameObject;
+            if (child.name == "traffic-green")
             {
                 return child.activeSelf;
             }

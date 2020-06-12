@@ -8,12 +8,11 @@ public class CarController : MonoBehaviour
     public float rotationSpeed;
     public float maxRayCastDistance;
 
-    private int trafficLightsParity;
     private const float EDGE_MARGIN = 0.05f;
 
     void Start()
     {
-        trafficLightsParity = 0;
+
     }
 
     void FixedUpdate()
@@ -39,7 +38,7 @@ public class CarController : MonoBehaviour
         float rotation = Mathf.Pow(distanceToLeftWall, 2) / (Mathf.Pow(distanceToLeftWall, 2) +
             Mathf.Pow(distanceToRightWall, 2));
         rotation = rotation * 2.0f - 1.0f;
-        translation *= Mathf.Max(0.5f, 1.0f - Mathf.Abs(rotation));
+        translation *= Mathf.Max(0.2f, Mathf.Pow(1.0f - Mathf.Abs(rotation), 2.0f));
         rotation *= rotationSpeed;
 
         translation *= Time.deltaTime;
@@ -61,6 +60,7 @@ public class CarController : MonoBehaviour
         Vector2 hitPosition = Vector2.zero;
         foreach (LayerMask mask in masks)
         {
+            Physics2D.queriesHitTriggers = false;
             RaycastHit2D hit = Physics2D.Raycast(originPoint.transform.position,
                 originPoint.transform.up, maxRayCastDistance, mask);
             if (hit.collider == null) continue;
