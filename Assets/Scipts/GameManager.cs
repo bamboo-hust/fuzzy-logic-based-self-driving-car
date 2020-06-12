@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
     private bool isPlaying = false;
     private bool reachedDestination = false;
 
-    private GraphGenerator graphGenerator;
     private Graph G;
     private bool isChooingStartingPoint;
     private bool isChooingEndingPoint;
@@ -27,6 +26,7 @@ public class GameManager : MonoBehaviour
     private GameObject car;
     private Color startingColor = Color.red;
     private Color endingColor = Color.magenta;
+    private GameObject secondPointInPath;
 
     void Awake()
     {
@@ -43,10 +43,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        graphGenerator = new GraphGenerator();
-        G = graphGenerator.Generate();
-        G.PrintGraph();
-
         cam = Camera.main;
 
         startingButton.GetComponent<Button>().onClick.AddListener(ClickStartingPoint);
@@ -97,11 +93,18 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundPlaying()
     {
-        ConfigCar();
-        ConfigCamera();
-        DisablePoints();
+        SetupGraph();
         SetupTrafficLights();
+        ConfigCamera();
+        ConfigCar();
+        DisablePoints();
         while (true) yield return null;
+    }
+
+    void SetupGraph()
+    {
+        GraphGenerator graphGenerator = new GraphGenerator(startingPoint, endingPoint);
+        G = graphGenerator.Generate();
     }
 
     void SetupTrafficLights()
@@ -112,25 +115,13 @@ public class GameManager : MonoBehaviour
 
     void TurnTrafficLightCollidersOnPathOff()
     {
-        GameObject firstPointInPath = Helper.GetClosestCheckPoint(startingPoint.transform.position);
-        GameObject lastPointInPath = Helper.GetClosestCheckPoint(endingPoint.transform.position);
+        List<GameObject> checkPoints = G.GetCheckPointsOnPath(startingPoint, endingPoint);
 
-        Debug.Log("FIRST POINT: " + firstPointInPath.name);
-        Debug.Log("LAST POINT: " + lastPointInPath.name);
+        secondPointInPath = checkPoints[1];
 
-        List<GameObject> checkPoints = G.GetCheckPointsOnPath(firstPointInPath, lastPointInPath);
-        
-        List<GameObject> pointsInPath = new List<GameObject>();
-        pointsInPath.Add(startingPoint);
-        pointsInPath.AddRange(checkPoints);
-        pointsInPath.Add(endingPoint);
-
-        Debug.Log("LENGTH OF PATH: " + pointsInPath.Count.ToString());
-
-        List<GameObject> lights = G.GetOpenLights(pointsInPath);
+        List<GameObject> lights = G.GetOpenLights(checkPoints);
         foreach (GameObject light in lights)
         {
-            Debug.Log(light.name);
             light.GetComponent<EdgeCollider2D>().enabled = false;
         }
     }
@@ -149,7 +140,7 @@ public class GameManager : MonoBehaviour
         car.SetActive(true);
         car.transform.position = startingPoint.transform.position;
 
-        Vector2 relativePos = endingPoint.transform.position - startingPoint.transform.position;
+        Vector2 relativePos = secondPointInPath.transform.position - startingPoint.transform.position;
         relativePos.Normalize();
         float rot_z = Mathf.Atan2(relativePos.y, relativePos.x) * Mathf.Rad2Deg;
         car.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
@@ -169,7 +160,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundEnding()
     {
-        return null;
+        while (true) yield return null;
     }
 
     private void ClickStartingPoint()

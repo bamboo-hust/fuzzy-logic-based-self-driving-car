@@ -15,6 +15,19 @@ public class GraphGenerator
         roadCollider = GameObject.Find("RoadCollider");
     }
 
+    public GraphGenerator(GameObject startingPoint, GameObject endingPoint) {
+        GameObject[] listCheckPoints = Helper.GetCheckPoints();
+        checkPoints = new GameObject[listCheckPoints.Length + 2];
+        checkPoints[0] = startingPoint;
+        for (int i = 0; i < listCheckPoints.Length; i++)
+        {
+            checkPoints[i + 1] = listCheckPoints[i];
+        }
+        checkPoints[checkPoints.Length - 1] = endingPoint;
+        trafficLights = Helper.GetTrafficLights();
+        roadCollider = GameObject.Find("RoadCollider");
+    }
+
     public Graph Generate() {
         Graph G = new Graph();
         for (int i = 0; i < checkPoints.Length; ++i) {
