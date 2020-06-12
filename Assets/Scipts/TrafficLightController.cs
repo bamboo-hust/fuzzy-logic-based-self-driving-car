@@ -44,7 +44,6 @@ public class TrafficLightController : MonoBehaviour
     {
         if (!GameManager.instance.IsPlaying()) return;
 
-        Debug.Log(trafficLightParity);
         UpdateLightStatus();
         UpdateOpenLightColliders();
     }

@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public GameObject carPrefab;
     public GameObject outsideWarning;
 
+    private const float MIN_DISTANCE = 0.1f;
+
     private bool isPlaying = false;
     private bool reachedDestination = false;
 
@@ -50,6 +52,7 @@ public class GameManager : MonoBehaviour
         goButton.GetComponent<Button>().onClick.AddListener(ClickGo);
         car = Instantiate(carPrefab);
         car.SetActive(false);
+        startingPoint = endingPoint = null;
 
         StartCoroutine(GameLoop());
     }
@@ -98,7 +101,10 @@ public class GameManager : MonoBehaviour
         ConfigCamera();
         ConfigCar();
         DisablePoints();
-        while (true) yield return null;
+        while (Vector2.Distance(car.transform.position, endingPoint.transform.position) > MIN_DISTANCE)
+        {
+            yield return null;
+        }
     }
 
     void SetupGraph()
@@ -158,6 +164,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundEnding()
     {
+        isPlaying = false;
+        reachedDestination = true;
         while (true) yield return null;
     }
 
@@ -216,7 +224,8 @@ public class GameManager : MonoBehaviour
         return isPlaying;
     }
 
-    public Vector3 GetCarPosition() {
+    public Vector3 GetCarPosition()
+    {
         return car.transform.position;
     }
 }
