@@ -120,6 +120,9 @@ public class GameManager : MonoBehaviour
         secondPointInPath = checkPoints[1];
 
         List<GameObject> lights = G.GetOpenLights(checkPoints);
+
+        GetComponent<TrafficLightController>().SetOpenLights(lights);
+
         foreach (GameObject light in lights)
         {
             light.GetComponent<EdgeCollider2D>().enabled = false;

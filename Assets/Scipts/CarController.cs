@@ -9,6 +9,7 @@ public class CarController : MonoBehaviour
     public float maxRayCastDistance;
 
     private int trafficLightsParity;
+    private const float EDGE_MARGIN = 0.05f;
 
     void Start()
     {
@@ -35,9 +36,6 @@ public class CarController : MonoBehaviour
         float distanceToLeftWall = GetDistance(leftSensor, masks);
         float distanceToRightWall = GetDistance(rightSensor, masks);
 
-        if (distanceToWall < 0.01f || distanceToLeftWall < 0.01f || distanceToRightWall < 0.01f)
-            translation = 0f;
-
         float rotation = Mathf.Pow(distanceToLeftWall, 2) / (Mathf.Pow(distanceToLeftWall, 2) +
             Mathf.Pow(distanceToRightWall, 2));
         rotation = rotation * 2.0f - 1.0f;
@@ -46,6 +44,11 @@ public class CarController : MonoBehaviour
 
         translation *= Time.deltaTime;
         rotation *= Time.deltaTime;
+
+        if (distanceToWall < EDGE_MARGIN) {
+            translation = 0;
+            rotation = 0;
+        }
 
         GetComponent<Rigidbody2D>().MoveRotation(GetComponent<Rigidbody2D>().rotation + rotation);
 
