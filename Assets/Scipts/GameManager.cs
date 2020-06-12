@@ -217,4 +217,8 @@ public class GameManager : MonoBehaviour
     {
         return isPlaying;
     }
+
+    public Vector3 GetCarPosition() {
+        return car.transform.position;
+    }
 }
