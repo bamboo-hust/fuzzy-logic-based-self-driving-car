@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,8 +14,9 @@ public class GameManager : MonoBehaviour
     public GameObject examplePoint;
     public GameObject carPrefab;
     public GameObject outsideWarning;
+    public GameObject reachedDestinationText;
 
-    private const float MIN_DISTANCE = 0.1f;
+    private const float MIN_DISTANCE = 0.13f;
 
     private bool isPlaying = false;
     private bool reachedDestination = false;
@@ -166,7 +168,14 @@ public class GameManager : MonoBehaviour
     {
         isPlaying = false;
         reachedDestination = true;
-        while (true) yield return null;
+        reachedDestinationText.GetComponent<Animator>().SetTrigger("reached");
+        while (true) {
+            if (Input.GetMouseButtonUp(0) && !isOverButtons())
+            {
+                SceneManager.LoadScene(0, LoadSceneMode.Single);
+            }
+            yield return null;
+        }
     }
 
     private void ClickStartingPoint()

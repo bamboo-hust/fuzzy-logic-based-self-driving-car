@@ -3,3 +3,4 @@ Assembly-CSharp.csproj
 ProjectSettings/ProjectVersion.txt
 Temp/
 obj/
+*/launch.json
