@@ -38,14 +38,18 @@ public class CarController : MonoBehaviour
         if (distanceToWall < 0.01f || distanceToLeftWall < 0.01f || distanceToRightWall < 0.01f)
             translation = 0f;
 
-        float rotation = distanceToLeftWall / (distanceToLeftWall + distanceToRightWall);
+        float rotation = Mathf.Pow(distanceToLeftWall, 2) / (Mathf.Pow(distanceToLeftWall, 2) +
+            Mathf.Pow(distanceToRightWall, 2));
         rotation = rotation * 2.0f - 1.0f;
+        translation *= Mathf.Max(0.5f, 1.0f - Mathf.Abs(rotation));
         rotation *= rotationSpeed;
 
         translation *= Time.deltaTime;
         rotation *= Time.deltaTime;
-        transform.Rotate(0, 0, rotation);
-        transform.position += transform.up * translation;
+
+        GetComponent<Rigidbody2D>().MoveRotation(GetComponent<Rigidbody2D>().rotation + rotation);
+
+        GetComponent<Rigidbody2D>().MovePosition(transform.position + transform.up * translation);
     }
 
     private float GetDistance(GameObject originPoint, List<LayerMask> masks)
