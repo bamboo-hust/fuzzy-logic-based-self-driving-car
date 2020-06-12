@@ -234,7 +234,7 @@ public class GameManager : MonoBehaviour
 
     private void SetDefaultCamera()
     {
-        cam.transform.position = new Vector3(0, 0, -10);
+        cam.transform.position = new Vector3(-1.68f, 0, -10);
         cam.orthographicSize = 4.9f;
     }
 

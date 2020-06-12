@@ -68,13 +68,13 @@ public class TrafficLightController : MonoBehaviour
             {
                 SetTrafficLight(lights[i], "red");
             }
-            else if (timestamps[i] < RED_TIME + YELLO_TIME)
+            else if (timestamps[i] < RED_TIME + GREEN_TIME)
             {
-                SetTrafficLight(lights[i], "yellow");
+                SetTrafficLight(lights[i], "green");
             }
             else
             {
-                SetTrafficLight(lights[i], "green");
+                SetTrafficLight(lights[i], "yellow");
             }
         }
     }
