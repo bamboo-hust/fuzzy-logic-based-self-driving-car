@@ -199,7 +199,7 @@ public class GameManager : MonoBehaviour
         point.transform.position = position;
     }
 
-    bool isOverButtons()
+    public bool isOverButtons()
     {
         if (startingButton.GetComponent<UIElement>().mouseOver) return true;
         if (endingButton.GetComponent<UIElement>().mouseOver) return true;
