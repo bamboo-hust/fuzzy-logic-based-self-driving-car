@@ -18,7 +18,7 @@ public class ObstacleController : MonoBehaviour
     void Update()
     {
         if (!GameManager.instance.IsPlaying()) return;
-        if (!Input.GetMouseButtonUp(0) || GameManager.instance.isOverButtons()) return;
+        if (!Input.GetMouseButtonUp(0)) return;
         if (obstacle.activeSelf) obstacle.SetActive(false);
         else
         {

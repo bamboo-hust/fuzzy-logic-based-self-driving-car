@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public GameObject carPrefab;
     public GameObject outsideWarning;
     public GameObject reachedDestinationText;
+    public GameObject GoUI;
 
     private const float MIN_DISTANCE = 0.13f;
 
@@ -103,10 +104,17 @@ public class GameManager : MonoBehaviour
         ConfigCamera();
         ConfigCar();
         DisablePoints();
+        DeactiveButtons();
         while (Vector2.Distance(car.transform.position, endingPoint.transform.position) > MIN_DISTANCE)
         {
             yield return null;
         }
+    }
+
+    void DeactiveButtons() {
+        startingButton.gameObject.SetActive(false);
+        endingButton.gameObject.SetActive(false);
+        goButton.gameObject.SetActive(false);
     }
 
     void SetupGraph()
@@ -170,7 +178,7 @@ public class GameManager : MonoBehaviour
         reachedDestination = true;
         reachedDestinationText.GetComponent<Animator>().SetTrigger("reached");
         while (true) {
-            if (Input.GetMouseButtonUp(0) && !isOverButtons())
+            if (Input.GetMouseButtonUp(0))
             {
                 SceneManager.LoadScene(0, LoadSceneMode.Single);
             }
@@ -192,8 +200,10 @@ public class GameManager : MonoBehaviour
 
     private void ClickGo()
     {
+        if (isPlaying || reachedDestination) return;
         if (startingPoint == null || endingPoint == null)
         {
+            GoUI.GetComponent<Animator>().SetTrigger("clickedOutside");
             return;
         }
         isPlaying = true;

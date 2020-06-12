@@ -53,16 +53,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scipts\CameraController.cs" />
-     <Compile Include="Assets\Scipts\CarController.cs" />
-     <Compile Include="Assets\Scipts\GameManager.cs" />
-     <Compile Include="Assets\Scipts\Graph.cs" />
-     <Compile Include="Assets\Scipts\GraphGenerator.cs" />
-     <Compile Include="Assets\Scipts\Helper.cs" />
-     <Compile Include="Assets\Scipts\ObstacleController.cs" />
-     <Compile Include="Assets\Scipts\TrafficLightController.cs" />
-     <Compile Include="Assets\Scipts\TrunkColliderHandler.cs" />
-     <Compile Include="Assets\Scipts\UIElement.cs" />
+     <Compile Include="Assets\Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\CarController.cs" />
+     <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\Graph.cs" />
+     <Compile Include="Assets\Scripts\GraphGenerator.cs" />
+     <Compile Include="Assets\Scripts\Helper.cs" />
+     <Compile Include="Assets\Scripts\ObstacleController.cs" />
+     <Compile Include="Assets\Scripts\TrafficLightController.cs" />
+     <Compile Include="Assets\Scripts\TrunkColliderHandler.cs" />
+     <Compile Include="Assets\Scripts\UIElement.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/home/quanglm1998/UnityProjects/fuzzy-logic-based-self-driving-car-2018/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
