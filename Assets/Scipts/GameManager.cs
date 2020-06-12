@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public Button startingButton;
     public Button endingButton;
     public Button goButton;
-    public GraphGenerator graphGenerator;
     public GameObject examplePoint;
     public GameObject carPrefab;
     public GameObject outsideWarning;
@@ -18,6 +17,7 @@ public class GameManager : MonoBehaviour
     private bool isPlaying = false;
     private bool reachedDestination = false;
 
+    private Graph G;
     private bool isChooingStartingPoint;
     private bool isChooingEndingPoint;
     private GameObject startingPoint;
@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     private GameObject car;
     private Color startingColor = Color.red;
     private Color endingColor = Color.magenta;
+    private GameObject secondPointInPath;
 
     void Awake()
     {
@@ -42,9 +43,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        graphGenerator = new GraphGenerator();
-        Graph G = graphGenerator.Generate();
-
         cam = Camera.main;
 
         startingButton.GetComponent<Button>().onClick.AddListener(ClickStartingPoint);
@@ -95,10 +93,49 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundPlaying()
     {
-        ConfigCar();
+        SetupGraph();
+        SetupTrafficLights();
         ConfigCamera();
+        ConfigCar();
         DisablePoints();
         while (true) yield return null;
+    }
+
+    void SetupGraph()
+    {
+        GraphGenerator graphGenerator = new GraphGenerator(startingPoint, endingPoint);
+        G = graphGenerator.Generate();
+    }
+
+    void SetupTrafficLights()
+    {
+        TurnAllTrafficLightCollidersOn();
+        TurnTrafficLightCollidersOnPathOff();
+    }
+
+    void TurnTrafficLightCollidersOnPathOff()
+    {
+        List<GameObject> checkPoints = G.GetCheckPointsOnPath(startingPoint, endingPoint);
+
+        secondPointInPath = checkPoints[1];
+
+        List<GameObject> lights = G.GetOpenLights(checkPoints);
+
+        GetComponent<TrafficLightController>().SetOpenLights(lights);
+
+        foreach (GameObject light in lights)
+        {
+            light.GetComponent<EdgeCollider2D>().enabled = false;
+        }
+    }
+
+    void TurnAllTrafficLightCollidersOn()
+    {
+        GameObject[] lights = Helper.GetTrafficLights();
+        foreach (GameObject light in lights)
+        {
+            light.GetComponent<EdgeCollider2D>().enabled = true;
+        }
     }
 
     void ConfigCar()
@@ -106,7 +143,7 @@ public class GameManager : MonoBehaviour
         car.SetActive(true);
         car.transform.position = startingPoint.transform.position;
 
-        Vector2 relativePos = endingPoint.transform.position - startingPoint.transform.position;
+        Vector2 relativePos = secondPointInPath.transform.position - startingPoint.transform.position;
         relativePos.Normalize();
         float rot_z = Mathf.Atan2(relativePos.y, relativePos.x) * Mathf.Rad2Deg;
         car.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
@@ -126,7 +163,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundEnding()
     {
-        return null;
+        while (true) yield return null;
     }
 
     private void ClickStartingPoint()
@@ -163,10 +200,9 @@ public class GameManager : MonoBehaviour
         Vector3 position = cam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 0.0f));
         position.z = 0;
         point.transform.position = position;
-        Debug.Log(point.transform.position);
     }
 
-    bool isOverButtons()
+    public bool isOverButtons()
     {
         if (startingButton.GetComponent<UIElement>().mouseOver) return true;
         if (endingButton.GetComponent<UIElement>().mouseOver) return true;
@@ -183,5 +219,9 @@ public class GameManager : MonoBehaviour
     public bool IsPlaying()
     {
         return isPlaying;
+    }
+
+    public Vector3 GetCarPosition() {
+        return car.transform.position;
     }
 }

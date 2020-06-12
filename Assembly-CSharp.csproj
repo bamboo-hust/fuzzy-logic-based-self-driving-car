@@ -59,6 +59,8 @@
      <Compile Include="Assets\Scipts\Graph.cs" />
      <Compile Include="Assets\Scipts\GraphGenerator.cs" />
      <Compile Include="Assets\Scipts\Helper.cs" />
+     <Compile Include="Assets\Scipts\ObstacleController.cs" />
+     <Compile Include="Assets\Scipts\TrafficLightController.cs" />
      <Compile Include="Assets\Scipts\UIElement.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/home/quanglm1998/UnityProjects/fuzzy-logic-based-self-driving-car-2018/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

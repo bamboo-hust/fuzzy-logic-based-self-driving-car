@@ -327,6 +327,8 @@ GameObject:
   m_Component:
   - component: {fileID: 596208071}
   - component: {fileID: 596208070}
+  - component: {fileID: 596208072}
+  - component: {fileID: 596208073}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -367,6 +369,32 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &596208072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596208069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53eaa49e24eac4207bebbcfc3a1d09ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obstaclePrefab: {fileID: 2614604064873673212, guid: 7ff48ad7183fbfd18a245cc418492650,
+    type: 3}
+--- !u!114 &596208073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 596208069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537eed9b569e5b1c1a8ad79fcaa44081, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &711416729
 GameObject:
   m_ObjectHideFlags: 0
@@ -1346,16 +1374,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1399265609465560024, guid: 24cd7a89ffc139ac3a64149b8f3182ae,
-        type: 3}
-      propertyPath: m_SortingLayerID
-      value: 328908059
-      objectReference: {fileID: 0}
-    - target: {fileID: 1399265609465560024, guid: 24cd7a89ffc139ac3a64149b8f3182ae,
-        type: 3}
-      propertyPath: m_SortingLayer
-      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 6622805713217122115, guid: 24cd7a89ffc139ac3a64149b8f3182ae,
         type: 3}

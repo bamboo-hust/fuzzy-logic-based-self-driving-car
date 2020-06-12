@@ -8,47 +8,73 @@ public class CarController : MonoBehaviour
     public float rotationSpeed;
     public float maxRayCastDistance;
 
+    private int trafficLightsParity;
+    private const float EDGE_MARGIN = 0.05f;
+
     void Start()
     {
-
+        trafficLightsParity = 0;
     }
 
     void FixedUpdate()
     {
         if (!GameManager.instance.IsPlaying()) return;
-        LayerMask mask = LayerMask.GetMask("Wall");
+
+        LayerMask wallMask = LayerMask.GetMask("Wall");
+        LayerMask lightMask = LayerMask.GetMask("TrafficLight");
+        List<LayerMask> masks = new List<LayerMask>();
+        masks.Add(wallMask);
+        masks.Add(lightMask);
+
         GameObject headSensor = transform.Find("Sensors/Front").gameObject;
-        float distanceToWall = GetDistance(headSensor, mask);
+        float distanceToWall = GetDistance(headSensor, masks);
         float translation = Mathf.Min(1.0f, distanceToWall * 10);
         translation *= speed;
 
         GameObject leftSensor = transform.Find("Sensors/Left").gameObject;
         GameObject rightSensor = transform.Find("Sensors/Right").gameObject;
-        float distanceToLeftWall = GetDistance(leftSensor, mask);
-        float distanceToRightWall = GetDistance(rightSensor, mask);
-        if (distanceToWall < 0.01f || distanceToLeftWall < 0.01f || distanceToRightWall < 0.01f)
-            translation = 0f;
+        float distanceToLeftWall = GetDistance(leftSensor, masks);
+        float distanceToRightWall = GetDistance(rightSensor, masks);
 
-        float rotation = distanceToLeftWall / (distanceToLeftWall + distanceToRightWall);
+        float rotation = Mathf.Pow(distanceToLeftWall, 2) / (Mathf.Pow(distanceToLeftWall, 2) +
+            Mathf.Pow(distanceToRightWall, 2));
         rotation = rotation * 2.0f - 1.0f;
+        translation *= Mathf.Max(0.5f, 1.0f - Mathf.Abs(rotation));
         rotation *= rotationSpeed;
 
         translation *= Time.deltaTime;
         rotation *= Time.deltaTime;
-        transform.Rotate(0, 0, rotation);
-        transform.position += transform.up * translation;
+
+        if (distanceToWall < EDGE_MARGIN) {
+            translation = 0;
+            rotation = 0;
+        }
+
+        GetComponent<Rigidbody2D>().MoveRotation(GetComponent<Rigidbody2D>().rotation + rotation);
+
+        GetComponent<Rigidbody2D>().MovePosition(transform.position + transform.up * translation);
     }
 
-    private float GetDistance(GameObject originPoint, LayerMask mask)
+    private float GetDistance(GameObject originPoint, List<LayerMask> masks)
     {
-        RaycastHit2D hit = Physics2D.Raycast(originPoint.transform.position,
-            originPoint.transform.up, maxRayCastDistance, mask);
-        if (hit.collider == null) return maxRayCastDistance;
-        else
+        float result = maxRayCastDistance;
+        Vector2 hitPosition = Vector2.zero;
+        foreach (LayerMask mask in masks)
         {
-            Debug.DrawLine(originPoint.transform.position, hit.point,
-                Color.green);
-            return Vector2.Distance(hit.point, originPoint.transform.position);
+            RaycastHit2D hit = Physics2D.Raycast(originPoint.transform.position,
+                originPoint.transform.up, maxRayCastDistance, mask);
+            if (hit.collider == null) continue;
+            else
+            {
+                float distance = Vector2.Distance(hit.point, originPoint.transform.position);
+                if (distance < result)
+                {
+                    result = distance;
+                    hitPosition = hit.point;
+                }
+            }
         }
+        Debug.DrawLine((Vector2)originPoint.transform.position, (Vector2)hitPosition, Color.green);
+        return result;
     }
 }
